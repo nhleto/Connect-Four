@@ -8,17 +8,6 @@ class Board
     @move = move
   end
 
-  def game
-    loop do
-      puts 'YOOOOOOOOO'
-      move = gets.chomp.to_i
-      place_piece(move, 'X')
-      display_board
-      win_check_by_row?
-      hi
-    end
-  end
-
   def place_piece(move, symbol)
     row = game_board.size - 1
     column = move - 1
@@ -40,22 +29,19 @@ class Board
     end
   end
 
-  def hi
-    puts(win_check_by_row? == true ? 'nice' : 'fuck')
-  end
-
-  def win_check_by_row?
-    game_board.each do |row|
+  def win_check_by_row?(board)
+    board.each do |row|
       output = row.each_cons(4).find { |index| index.uniq.size == 1 && index.first != '.' }
       return true unless output.nil?
     end
     false
   end
 
-  # def win_check_by_column?
-  #   win_check_by_row?(game_board.transpose)
-  # end
+  def win_check_by_column?
+    grid = game_board.transpose
+    win_check_by_row?(grid)
+  end
 end
 
-ttt = Board.new
-ttt.game
+# ttt = Board.new
+# ttt.win_check_by_column?
