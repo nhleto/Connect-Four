@@ -67,7 +67,7 @@ describe Board do
         expect(board.win_check_by_column?).to eq(true)
       end
     end
-    context 'returns false if no columns have 4 in a row' do
+    context 'if no columns have 4 in a row' do
       before do
         board.game_board = [%w[. . . . . . .],
                             %w[. . . . . . .],
@@ -80,5 +80,33 @@ describe Board do
         expect(board.win_check_by_column?).to be(false)
       end
     end
+  end
+  describe '#win_check_by_diagonal?' do
+    context 'if there are 4 in a row diagonal' do
+      before do
+        board.game_board = [%w[. . . . . . .],
+                            %w[. . . X . . .],
+                            %w[X . X X X . .],
+                            %w[. X . X X . .],
+                            %w[X . X . . X .],
+                            %w[. X . X . . X]]
+      end
+      it 'returns true' do
+        expect(board.win_check_by_left_diagonals?).to be(true)
+      end
+    end
+    # context 'when there are not four in a row diagonal' do
+    #   before do
+    #     board.game_board = [%w[. . . . . . .],
+    #                         %w[. . . . . . .],
+    #                         %w[X . . . X . .],
+    #                         %w[. . . X . . .],
+    #                         %w[X . X . . . .],
+    #                         %w[X X . X . . .]]
+    #   end
+    #   it 'returns false' do
+    #     expect(board.win_check_by_diagonal?).to be(false)
+    #   end
+    # end
   end
 end
