@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'pry'
-
 # holding for game board and board error checking
 class Board
   attr_accessor :game_board, :move
-  attr_reader :diags, :rotated
+  attr_reader :diag, :rotated
   def initialize
-    @game_board = Array.new(6) { Array.new(7) { '.' } }
+    @game_board = Array.new(6) { Array.new(7, '.') }
     @move = move
-    @diags = diags
+    @diag = diag
   end
 
   def place_piece(move, symbol)
@@ -34,6 +32,14 @@ class Board
     puts "\n\n"
   end
 
+  def valid_move?(move)
+    move.between?(1, 7)
+  end
+
+  def board_full?
+    game_board.all? { |row| row.all?(/[XO]/) }
+  end
+
   def win_check_by_row?(board)
     board.each do |row|
       output = row.each_cons(4).find { |index| index.uniq.size == 1 && index.first != '.' }
@@ -47,19 +53,36 @@ class Board
     win_check_by_row?(grid)
   end
 
-  def win_check_by_left_diagonals?(symbol = 'X')
-    6.downto(3) do |j|
-      3.downto(2) do |i|
-        if game_board[i][j] == symbol && game_board[i + 1][j + 1] == symbol && game_board[i + 2][j + 2] == symbol && game_board[i + 3][j + 3] == symbol
-    
-        end
+  def win_check_by_diagonals?(symbol = 'X')
+    row = 0
+    until row > 5
+      col = 0
+      until col > 6
+        return true if diag_check?(row, col, symbol)
+
+        col += 1
       end
+      row += 1
     end
     false
+  end
+
+  def diag_check?(row, col, symbol)
+    shift = []
+    shift[0] =  1 if row.between?(0, 2)
+    shift[0] = -1 if row.between?(3, 5)
+    shift[1] =  1 if col.between?(0, 3)
+    shift[1] = -1 if col.between?(3, 6)
+    diagonal_equals?(row, col, symbol, shift)
+  end
+
+  def diagonal_equals?(row, col, symbol, shift)
+    diagonal = []
+    0.upto(3) { |n| diagonal << game_board[row + (shift[0] * n)][col + shift[1] * n] }
+    diagonal.all?(symbol)
   end
 end
 
 # ttt = Board.new
-# # ttt.create_diags
-# # ttt.win_check_by_diagonal?
+# p ttt.board_full?
 # ttt. display_board
