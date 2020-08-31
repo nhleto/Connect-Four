@@ -125,6 +125,14 @@ describe Board do
   end
   describe '#board_full?' do
     context 'if game_board is not full' do
+      before do
+        board.game_board = [%w[. . . . . . .],
+                            %w[. . . . . . .],
+                            %w[X . . . X . .],
+                            %w[. . . X . . .],
+                            %w[X . O . . . .],
+                            %w[X X . X . . .]]
+      end
       it 'returns false' do
         expect(board.board_full?).to be(false)
       end
@@ -140,6 +148,22 @@ describe Board do
       end
       it 'returns true' do
         expect(board.board_full?).to be(true)
+      end
+    end
+  end
+  describe '#column_full?' do
+    context 'if user input fits in column' do
+      before do
+        board.game_board = [%w[X . X X X X X],
+                            %w[X X X X X X X],
+                            %w[X X X X X X X],
+                            %w[X X O X X O X],
+                            %w[X X O X X O X],
+                            %w[X X O X X X X]]
+      end
+      it 'returns true' do
+        move = 1
+        expect(board.column_not_full?(move)).to be(true)
       end
     end
   end

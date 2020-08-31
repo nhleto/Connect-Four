@@ -2,30 +2,28 @@
 
 # holding for game board and board error checking
 class Board
-  attr_accessor :game_board, :move
+  attr_accessor :game_board
   attr_reader :diag, :rotated
   def initialize
     @game_board = Array.new(6) { Array.new(7, '.') }
-    @move = move
     @diag = diag
   end
 
   def place_piece(move, symbol)
-    row = game_board.size - 1
-    column = move.to_i - 1
-    while (game_board.size - row) <= game_board.size
-      if game_board[row][column] == '.'
-        game_board[row][column] = symbol
-        row = -1
-      else
-        row -= 1
-      end
+    row = 5
+    until game_board[row][move] == '.'
+      return unless game_board[0][move] == '.'
+
+      row -= 1
     end
+    # puts `clear`
+    game_board[row][move] = symbol
+    p game_board
   end
 
   def display_board
     puts "\n\n"
-    puts '1  2  3  4  5  6  7'.center(80)
+    puts '0  1  2  3  4  5  6'.center(80)
     game_board.each do |row|
       puts row.join('  ').center(80)
     end
@@ -33,7 +31,12 @@ class Board
   end
 
   def valid_move?(move)
-    move.between?(1, 7)
+    move.between?(0, 6) && column_not_full?(move)
+  end
+
+  def column_not_full?(move)
+    columns = game_board.transpose
+    columns[move].any? { |cell| cell == '.' }
   end
 
   def board_full?
@@ -84,5 +87,4 @@ class Board
 end
 
 # ttt = Board.new
-# p ttt.board_full?
-# ttt. display_board
+# ttt.column_not_full?
