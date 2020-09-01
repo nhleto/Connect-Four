@@ -21,7 +21,7 @@ describe Board do
       it 'slides to bottom of last available space of array' do
         move = 3
         board.place_piece(move, 'X')
-        expect(board.game_board[5][move - 1]).to eq('X')
+        expect(board.game_board[5][move]).to eq('X')
       end
     end
   end
@@ -109,20 +109,6 @@ describe Board do
       end
     end
   end
-  describe '#valid_move?' do
-    context 'if user input is between (1 - 7)' do
-      it 'returns true' do
-        move = 3
-        expect(board.valid_move?(move)).to be(true)
-      end
-    end
-    context 'if user input is not between (1 - 7)' do
-      it 'returns false' do
-        move = 11
-        expect(board.valid_move?(move)).to be(false)
-      end
-    end
-  end
   describe '#board_full?' do
     context 'if game_board is not full' do
       before do
@@ -161,9 +147,50 @@ describe Board do
                             %w[X X O X X O X],
                             %w[X X O X X X X]]
       end
-      it 'returns true' do
+      xit 'returns true' do
         move = 1
         expect(board.column_not_full?(move)).to be(true)
+      end
+    end
+  end
+  describe '#connect_four?' do
+    context 'if there is horizontal/vertical/diag win' do
+      before do
+        board.game_board = [%w[. . . . . . .],
+                            %w[. . . . . . .],
+                            %w[X . . . X . .],
+                            %w[. . . X . . .],
+                            %w[X . X . . . .],
+                            %w[X X . X . . .]]
+      end
+      it 'returns true' do
+        expect(board.connect_four?).to be(true)
+      end
+    end
+    context 'if there is horizontal/vertical/diag win' do
+      before do
+        board.game_board = [%w[. . . . . . .],
+                            %w[. . . . . . .],
+                            %w[X . . . X . .],
+                            %w[. . . X . . .],
+                            %w[X . O . . . .],
+                            %w[X X X X . . .]]
+      end
+      it 'returns true' do
+        expect(board.connect_four?).to be(true)
+      end
+    end
+    context 'if there is horizontal/vertical/diag win' do
+      before do
+        board.game_board = [%w[. . . . . . .],
+                            %w[. . . . . . .],
+                            %w[X . . . X . .],
+                            %w[X . . X . . .],
+                            %w[X . O . . . .],
+                            %w[X X . X . . .]]
+      end
+      it 'returns true' do
+        expect(board.connect_four?).to be(true)
       end
     end
   end

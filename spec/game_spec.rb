@@ -36,22 +36,24 @@ describe Game do
       end
     end
   end
-  describe '#play_game' do
-    context 'in main loop of game' do
-      it 'marks board with player input' do
-        # Arrange
-        move = '3'
-        allow(game).to receive(:turn_switcher)
-        allow(game).to receive(:gets).and_return(move)
-        allow(game).to receive(:gets_guess)
-        allow(game).to receive(:puts)
-        allow(game).to receive(:win_cons)
-        allow_any_instance_of(Board).to receive(:column_not_full?)
-        allow_any_instance_of(Board).to receive(:display_board)
-        # Assert
-        expect(board).to receive(:place_piece).with(move, 'X')
-        # Act
-        game.play_game
+  describe '#win_cons' do
+    it 'declares winner' do
+      # Arrange
+      allow(board).to receive(:connect_four?).and_return(true)
+      player = double('player1', name: 'Henry')
+      allow(game).to receive(:win_cons)
+      # game.instance_variable_set(:@current_player, player)
+      win_message = "#{player.name} is the WINNER!"
+      # Assert
+      allow(game)
+      # Act
+      expect(game.win_cons).to eq(win_message)
+    end
+    context 'if no winner is chosen' do
+      xit 'is a cats game' do
+        allow_any_instance_of(Board).to receive(:connect_four)
+        draw_message = "\nCat's Game!"
+        expect(game.cats_game).to eq(draw_message)
       end
     end
   end

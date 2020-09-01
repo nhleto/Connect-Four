@@ -32,11 +32,17 @@ class Board
 
   def column_not_full?(move)
     columns = game_board.transpose
-    columns[move].all? { |cell| cell != '.' }
+    columns[move].all? { |cell| cell == '.' }
   end
 
   def board_full?
     game_board.all? { |row| row.all?(/[XO]/) }
+  end
+
+  def connect_four?
+    win_check_by_row?(game_board) ||
+      win_check_by_row?(game_board.transpose) ||
+      win_check_by_diagonals?
   end
 
   def win_check_by_row?(board)

@@ -10,13 +10,13 @@ class Game
   Player = Struct.new(:name, :symbol)
 
   attr_accessor :board
-  attr_reader :player1, :player2, :current_user, :error, :move
+  attr_reader :player1, :player2, :current_player, :error, :move
   def initialize
     @player1 = Player.new(:name, "\u2622")
     @player2 = Player.new(:name, "\u262E")
     @board = Board.new
     @error = Error.new
-    @current_user = nil
+    @current_player = nil
     @move = move
   end
 
@@ -62,31 +62,46 @@ class Game
 
   def play_game
     random_turn_picker
-    loop do
+    lopp do
       board.display_board
-      puts "\n#{current_user.name}, Please make a guess"
+      puts "\n#{current_player.name}, Please make a guess"
       get_guess
       # error.column_full_error(move)
-      board.place_piece(move, current_user.symbol)
-      # win_cons
+      board.place_piece(move, current_player.symbol)
+      win_cons
       turn_switcher
+    end
+
+    def win_cons
+      if board.connect_four?
+        "#{@current_player.name} is the WINNER!"
+        # reset_answer
+        # replay
+      elsif cats_game?
+        puts "\nCat's Game!"
+        # replay
+      end
     end
   end
 
   protected
 
   def random_turn_picker
-    @current_user = [player1, player2].sample
-    puts "\n#{current_user.name}, you were selected to go first. Good luck!"
-    @current_user
+    @current_player = [player1, player2].sample
+    puts "\n#{current_player.name}, you were selected to go first. Good luck!"
+    @current_player
   end
 
   def turn_switcher
-    @current_user == player1 ? @current_user = player2 : @current_user = player1
+    @current_player = @current_player == player1 ? player2 : player1
   end
 
   def get_guess(default_input = gets.chomp)
-    @move = Integer(default_input) rescue false
+    @move = begin
+              Integer(default_input)
+            rescue StandardError
+              false
+            end
     return @move if @move && good_int?(move)
 
     error.guess_error
