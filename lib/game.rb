@@ -62,7 +62,7 @@ class Game
 
   def play_game
     random_turn_picker
-    lopp do
+    loop do
       board.display_board
       puts "\n#{current_player.name}, Please make a guess"
       get_guess
@@ -71,6 +71,7 @@ class Game
       win_cons
       turn_switcher
     end
+  end
 
     def win_cons
       if board.connect_four?
@@ -82,9 +83,14 @@ class Game
         # replay
       end
     end
-  end
 
-  protected
+  private
+
+  def cats_game?
+    return false unless board.board_full?
+
+    true
+  end
 
   def random_turn_picker
     @current_player = [player1, player2].sample

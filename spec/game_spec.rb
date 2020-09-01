@@ -39,22 +39,15 @@ describe Game do
   describe '#win_cons' do
     it 'declares winner' do
       # Arrange
-      allow(board).to receive(:connect_four?).and_return(true)
+      board = double(:board, connect_four?: true)
+      game.instance_variable_set(:@board, board)
       player = double('player1', name: 'Henry')
-      allow(game).to receive(:win_cons)
-      # game.instance_variable_set(:@current_player, player)
-      win_message = "#{player.name} is the WINNER!"
+      game.instance_variable_set(:@current_player, player)
+      win_message = 'Henry is the WINNER!'
       # Assert
-      allow(game)
+
       # Act
       expect(game.win_cons).to eq(win_message)
-    end
-    context 'if no winner is chosen' do
-      xit 'is a cats game' do
-        allow_any_instance_of(Board).to receive(:connect_four)
-        draw_message = "\nCat's Game!"
-        expect(game.cats_game).to eq(draw_message)
-      end
     end
   end
 end
