@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
+require './error'
+require 'pry'
+
 # holding for game board and board error checking
 class Board
-  attr_accessor :game_board
-  attr_reader :diag, :rotated
+  attr_accessor :game_board, :move, :error
   def initialize
     @game_board = Array.new(6) { Array.new(7, '.') }
-    @diag = diag
   end
 
   def place_piece(move, symbol)
@@ -18,7 +19,6 @@ class Board
     end
     # puts `clear`
     game_board[row][move] = symbol
-    p game_board
   end
 
   def display_board
@@ -30,13 +30,9 @@ class Board
     puts "\n\n"
   end
 
-  def valid_move?(move)
-    move.between?(0, 6) && column_not_full?(move)
-  end
-
   def column_not_full?(move)
     columns = game_board.transpose
-    columns[move].any? { |cell| cell == '.' }
+    columns[move].all? { |cell| cell != '.' }
   end
 
   def board_full?

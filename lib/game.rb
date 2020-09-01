@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
 require './board'
+require './error'
 require 'pry'
 require 'colorize'
 
 # holds player choices and game decisions
 class Game
-  attr_accessor :board, :move
-  attr_reader :player1, :player2
+  Player = Struct.new(:name, :symbol)
+
+  attr_accessor :board
+  attr_reader :player1, :player2, :current_user, :error, :move
   def initialize
-    @player1 = player1
-    @p1symbol = "\u2622"
-    @player2 = player2
-    @p2symbol = "\u262E"
+    @player1 = Player.new(:name, "\u2622")
+    @player2 = Player.new(:name, "\u262E")
     @board = Board.new
+    @error = Error.new
+    @current_user = nil
+    @move = move
   end
 
   def intro_text
@@ -44,62 +48,53 @@ class Game
   def start_game
     intro_text
     set_players
-    game_loop
+    play_game
   end
 
   def set_players
-    player1_prompt
-    @player1 = set_name
-    player1_greeting
-    player2_welcome
-    @player2 = set_name
-    player2_greeting
+    puts "\nWelcome Player 1! Please enter your name..."
+    player1.name = set_name
+    puts "\nWelcome Player 2! Please enter your name..."
+    player2.name = set_name
+    puts "\nWelcome, #{player1.name} and #{player2.name}!"
+    sleep(2)
   end
 
-  def player1_move
+  def play_game
+    random_turn_picker
     loop do
       board.display_board
-      puts "\nMake your move..."
+      puts "\n#{current_user.name}, Please make a guess"
       get_guess
-      p board.column_not_full?(move)
-      board.valid_move?(move) ? board.place_piece(move, 'X') : player1_move
-      # player2_move
-    end
-  end
-
-  def player2_move
-    loop do
-      board.display_board
-      move = gets.chomp.to_i
-      board.valid_move?(move) ? board.place_piece(move, 'O') : player2_move
-      player1_move
+      # error.column_full_error(move)
+      board.place_piece(move, current_user.symbol)
+      # win_cons
+      turn_switcher
     end
   end
 
   protected
 
+  def random_turn_picker
+    @current_user = [player1, player2].sample
+    puts "\n#{current_user.name}, you were selected to go first. Good luck!"
+    @current_user
+  end
+
+  def turn_switcher
+    @current_user == player1 ? @current_user = player2 : @current_user = player1
+  end
+
   def get_guess(default_input = gets.chomp)
     @move = Integer(default_input) rescue false
-    return @move if @move.between?(1, 7)
+    return @move if @move && good_int?(move)
 
-    puts 'Please enter an integer (0-6).'
+    error.guess_error
     get_guess
   end
 
-  def player1_prompt
-    puts "\nPlayer 1, please enter your name..."
-  end
-
-  def player1_greeting
-    puts "\nNice to meet you, #{@player1}! Your game-piece is #{@p1symbol}"
-  end
-
-  def player2_welcome
-    puts "\n\nPlayer 2, please enter your name..."
-  end
-
-  def player2_greeting
-    puts "\nNice to meet you, #{@player2}! Your game-piece is #{@p2symbol} "
+  def good_int?(move)
+    move.between?(0, 6)
   end
 
   def set_name
@@ -107,7 +102,7 @@ class Game
     loop do
       break if valid_name?(user_input)
 
-      puts 'Please enter a valid name (a-z)...'
+      error.name_error
       user_input = gets.chomp
     end
     user_input
@@ -118,5 +113,5 @@ class Game
   end
 end
 
-c4 = Game.new
-c4.player1_move
+# c4 = Game.new
+# c4.start_game

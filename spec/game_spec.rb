@@ -5,6 +5,9 @@ require './lib/board.rb'
 
 describe Game do
   subject(:game) { described_class.new }
+  let(:board) { instance_double(Board) }
+  let(:error) { instance_double(Error) }
+
   describe '#set_players' do
     context 'when the game begins' do
       it 'prompts player 1 and 2 to choose enter names' do
@@ -23,6 +26,7 @@ describe Game do
     context 'when incorrect input is entered' do
       it 'rejects with error message 3 times' do
         # Arrange
+        allow_any_instance_of(Error).to receive(:puts)
         allow(game).to receive(:puts)
         allow(game).to receive(:gets).and_return('Az12', '12131', 'Henry')
         # Assert
@@ -32,19 +36,22 @@ describe Game do
       end
     end
   end
-  describe '#game_loop' do
-    context 'main loop for game' do
-      it 'accepts player input for marker drop' do
+  describe '#play_game' do
+    context 'in main loop of game' do
+      it 'marks board with player input' do
         # Arrange
-        move = 3
+        move = '3'
+        allow(game).to receive(:turn_switcher)
+        allow(game).to receive(:gets).and_return(move)
+        allow(game).to receive(:gets_guess)
         allow(game).to receive(:puts)
         allow(game).to receive(:win_cons)
-        allow(game).to receive(:place_piece)
+        allow_any_instance_of(Board).to receive(:column_not_full?)
+        allow_any_instance_of(Board).to receive(:display_board)
         # Assert
-        expect(game).to receive(:gets).and_return(move)
-
+        expect(board).to receive(:place_piece).with(move, 'X')
         # Act
-        game.game_loop
+        game.play_game
       end
     end
   end
