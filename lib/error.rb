@@ -8,11 +8,13 @@ class Error
   attr_reader :board, :move
   def initialize
     @board = Board.new
-    # @game = Game.new
   end
 
   # def column_full_error(move)
-  #   p board.column_not_full?(move)
+  #   p 'hi'
+  #   if board.column_not_full?(move) == false
+  #     puts 'nooooooooo'
+  #   end
   # end
 
   def guess_error

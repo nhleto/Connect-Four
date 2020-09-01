@@ -57,7 +57,7 @@ class Game
     puts "\nWelcome Player 2! Please enter your name..."
     player2.name = set_name
     puts "\nWelcome, #{player1.name} and #{player2.name}!"
-    sleep(2)
+    # sleep(2)
   end
 
   def play_game
@@ -66,7 +66,8 @@ class Game
       board.display_board
       puts "\n#{current_player.name}, Please make a guess"
       get_guess
-      # error.column_full_error(move)
+      # p board.column_not_full?(move)
+      column_full_error(move)
       board.place_piece(move, current_player.symbol)
       win_cons
       turn_switcher
@@ -74,17 +75,40 @@ class Game
   end
 
     def win_cons
-      if board.connect_four?
-        "#{@current_player.name} is the WINNER!"
+      if board.connect_four?(current_player.symbol)
+        puts "#{@current_player.name} is the WINNER!"
         # reset_answer
-        # replay
+        replay
       elsif cats_game?
         puts "\nCat's Game!"
-        # replay
+        replay
       end
     end
 
   private
+
+  def replay
+    replay_text
+    if @answer == 'Y'
+      board.clear_board
+      system('clear')
+      start_game
+    else
+      puts "\nCya"
+      exit
+    end
+  end
+
+  def replay_text
+    puts 'Would you like to play again? Y/N'
+    @answer = gets.chomp.to_s.upcase until @answer == 'Y' || @answer == 'N'
+  end
+
+  def column_full_error(move)
+    if board.column_not_full?(move) == false
+      puts 'nooooooooo'
+    end
+  end
 
   def cats_game?
     return false unless board.board_full?

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require './error'
-require 'pry'
 
 # holding for game board and board error checking
 class Board
@@ -30,19 +29,24 @@ class Board
     puts "\n\n"
   end
 
+  def clear_board
+    game_board.clear
+    Array.new(6) { Array.new(7, '.') }
+  end
+
   def column_not_full?(move)
     columns = game_board.transpose
-    columns[move].all? { |cell| cell == '.' }
+    columns[move].any? { |cell| cell == '.' }
   end
 
   def board_full?
-    game_board.all? { |row| row.all?(/[XO]/) }
+    game_board.all? { |row| row.all?(/[☢☮]/) }
   end
 
-  def connect_four?
+  def connect_four?(symbol)
     win_check_by_row?(game_board) ||
-      win_check_by_row?(game_board.transpose) ||
-      win_check_by_diagonals?
+      win_check_by_column? ||
+      win_check_by_diagonals?(symbol)
   end
 
   def win_check_by_row?(board)
@@ -58,7 +62,7 @@ class Board
     win_check_by_row?(grid)
   end
 
-  def win_check_by_diagonals?(symbol = 'X')
+  def win_check_by_diagonals?(symbol)
     row = 0
     until row > 5
       col = 0
