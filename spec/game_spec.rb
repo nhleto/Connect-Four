@@ -26,28 +26,15 @@ describe Game do
     context 'when incorrect input is entered' do
       it 'rejects with error message 3 times' do
         # Arrange
+        allow_any_instance_of(Board).to receive(:setup)
         allow_any_instance_of(Error).to receive(:puts)
         allow(game).to receive(:puts)
-        allow(game).to receive(:gets).and_return('Az12', '12131', 'Henry')
+        allow(game).to receive(:gets).and_return('Az12__', '#12$s131', 'Henry')
         # Assert
-        expect(game).to receive(:gets).thrice
+        expect(game).to receive(:gets).exactly(4).times
         # Act
         game.set_players
       end
-    end
-  end
-  describe '#win_cons' do
-    it 'declares winner' do
-      # Arrange
-      board = double(:board, connect_four?: true)
-      game.instance_variable_set(:@board, board)
-      player = double('player1', name: 'Henry')
-      game.instance_variable_set(:@current_player, player)
-      win_message = 'Henry is the WINNER!'
-      # Assert
-
-      # Act
-      expect(game.win_cons).to eq(win_message)
     end
   end
 end

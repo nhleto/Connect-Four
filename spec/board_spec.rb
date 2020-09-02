@@ -19,8 +19,10 @@ describe Board do
   describe '#place_piece' do
     context 'when user enters input' do
       it 'slides to bottom of last available space of array' do
+        allow(board).to receive(:system)
         move = 3
         board.place_piece(move, '☢')
+        move -= 1
         expect(board.game_board[5][move]).to eq('☢')
       end
     end
@@ -150,7 +152,7 @@ describe Board do
                             %w[X X O X X X X]]
       end
       it 'returns true' do
-        move = 1
+        move = 2
         expect(board.column_not_full?(move)).to be(true)
       end
     end

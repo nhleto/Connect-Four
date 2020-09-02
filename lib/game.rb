@@ -51,6 +51,15 @@ class Game
     play_game
   end
 
+  def set_players
+    puts "\nPlayer 1, please enter your name...".green
+    player1.name = set_name
+    puts "\nPlayer 2, please enter your name...".green
+    player2.name = set_name
+    puts "\nWelcome, #{player1.name} and #{player2.name}!".green
+    sleep(2)
+  end
+  
   def play_game
     system('clear')
     random_turn_picker
@@ -66,6 +75,7 @@ class Game
 
   def win_cons
     if board.connect_four?(current_player.symbol)
+      puts "#{@current_player.name} is the WINNER!".green
       win_resets
     elsif cats_game?
       puts "\nCat's Game!".cyan
@@ -75,19 +85,9 @@ class Game
 
   private
 
-  def set_players
-    puts "\nPlayer 1, please enter your name...".green
-    player1.name = set_name
-    puts "\nPlayer 2, please enter your name...".green
-    player2.name = set_name
-    puts "\nWelcome, #{player1.name} and #{player2.name}!".green
-    sleep(2)
-  end
-
   def win_resets
     board.display_board
     reset_answer
-    puts "#{@current_player.name} is the WINNER!".green
     sleep(1)
     replay
   end
@@ -162,5 +162,5 @@ class Game
   end
 end
 
-c4 = Game.new
-c4.start_game
+# c4 = Game.new
+# c4.start_game
