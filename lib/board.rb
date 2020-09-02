@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require './error'
 require 'colorize'
 
 # holding for game board and board error checking
