@@ -1,40 +1,43 @@
 # frozen_string_literal: true
 
 require './error'
+require 'colorize'
 
 # holding for game board and board error checking
 class Board
   attr_accessor :game_board, :move, :error
   def initialize
-    @game_board = Array.new(6) { Array.new(7, '.') }
+    setup
   end
 
   def place_piece(move, symbol)
+    move -= 1
     row = 5
     until game_board[row][move] == '.'
       return unless game_board[0][move] == '.'
 
       row -= 1
     end
-    # puts `clear`
+    system('clear')
     game_board[row][move] = symbol
   end
 
   def display_board
     puts "\n\n"
-    puts '0  1  2  3  4  5  6'.center(80)
+    puts "\t 1 2 3 4 5 6 7".yellow
     game_board.each do |row|
-      puts row.join('  ').center(80)
+      puts "\t|#{row.first}".red + "|#{row[1]}".red + "|#{row[2]}".red + "|#{row[3]}".red + "|#{row[4]}".red + "|#{row[5]}".red + "|#{row.last}|".red 
     end
     puts "\n\n"
   end
 
   def clear_board
     game_board.clear
-    Array.new(6) { Array.new(7, '.') }
+    setup
   end
 
   def column_not_full?(move)
+    move -= 1
     columns = game_board.transpose
     columns[move].any? { |cell| cell == '.' }
   end
@@ -90,7 +93,13 @@ class Board
     0.upto(3) { |n| diagonal << game_board[row + (shift[0] * n)][col + shift[1] * n] }
     diagonal.all?(symbol)
   end
+
+  private
+
+  def setup
+    @game_board = Array.new(6) { Array.new(7, '.') }
+  end
 end
 
 # ttt = Board.new
-# ttt.column_not_full?
+# ttt.display_board

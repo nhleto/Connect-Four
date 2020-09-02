@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require './board'
-# require './game'
+require 'colorize'
 
 # responsible for handling error messages
 class Error
@@ -10,18 +10,11 @@ class Error
     @board = Board.new
   end
 
-  # def column_full_error(move)
-  #   p 'hi'
-  #   if board.column_not_full?(move) == false
-  #     puts 'nooooooooo'
-  #   end
-  # end
-
   def guess_error
-    puts 'Please enter an integer (0-6)'
+    puts 'Please enter a valid move.'.red
   end
 
   def name_error
-    puts 'Please enter a valid name (a-z)...'
+    puts 'Please enter a valid name (a-z)...'.red
   end
 end
