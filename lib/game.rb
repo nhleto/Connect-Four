@@ -41,11 +41,12 @@ class Game
         
         
     HEREDOC
-    puts 'Press ENTER when you are ready to play...'
+    puts 'Press ENTER when you are ready to play....'
     gets.chomp
   end
 
   def start_game
+    system('clear')
     set_players
     intro_text
     play_game
@@ -59,7 +60,7 @@ class Game
     puts "\nWelcome, #{player1.name} and #{player2.name}!".green
     sleep(2)
   end
-  
+
   def play_game
     system('clear')
     random_turn_picker
