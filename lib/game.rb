@@ -41,7 +41,7 @@ class Game
         
         
     HEREDOC
-    puts 'Press ENTER when you are ready to play....'
+    puts 'Press ENTER when you are ready to play..'
     gets.chomp
   end
 
