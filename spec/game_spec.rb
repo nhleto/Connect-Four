@@ -50,5 +50,11 @@ describe Game do
         expect(game.player2.symbol).to be('☮')
       end
     end
+    context 'when game begins' do
+      it 'creates a new board instance' do
+        # Assert
+        expect(game.board).to be_instance_of(Board)
+      end
+    end
   end
 end
