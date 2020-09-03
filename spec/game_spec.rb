@@ -37,4 +37,18 @@ describe Game do
       end
     end
   end
+  describe 'initialization' do
+    context 'when game begins' do
+      it 'creates a new player struct' do
+        # Assert
+        expect(game.player1.symbol).to be('☢')
+      end
+    end
+    context 'when game begins' do
+      it 'creates a new player struct' do
+        # Assert
+        expect(game.player2.symbol).to be('☮')
+      end
+    end
+  end
 end
